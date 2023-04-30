@@ -1,56 +1,48 @@
-var directionX = 10;
-var directionY = 0;
+const pika = document.querySelector('.pika');
+const poop = document.querySelector('.poop');
 
-document.onkeydown = function (event) {
-    switch (event.keyCode){
-        case 37:
-            directionX = -10;
-            directionY = 0;
-            break;
-        case 38:
-            directionX = 0;
-            directionY = -10;
-            break;
-        case 39:
-            directionX = 10;
-            directionY = 0;
-            break;
-        case 40:
-            directionX = 0;
-            directionY = 10;
-            break;
-    }
+const jump = () => {
+    document.getElementById("text-start").style.color = "white";
+
+  pika.classList.add('jump');
+
+  setTimeout(() => {
+    pika.classList.remove('jump');
+  }, 500);
 };
 
-var canvas = document.getElementById("snake");
-var canvas2d = canvas.getContext("2d");
+const loop = setInterval(() => {
 
-var gameEnded = false;
-canvas.width = 400;
-canvas.height = 400;
+    console.log('loop')
 
-var snakeSegments = [];
-var snakeLength = 1;
+  const poopPosition = poop.offsetLeft;
+  const pikaPosition = +window.getComputedStyle(pika).bottom.replace(`px`, '');
 
-var snakeX = 0;
-var snakeY = 0;
+  console.log(pikaPosition);
 
-function moveSnake() {
-  snakeSegments.unshift({ x: snakeX, y: snakeY });
-  snakeX += directionX;
-  snakeY += directionY;
-}
+  if (poopPosition <= 120 && poopPosition > 0 && pikaPosition < 85) {
 
-function drawSnake() {
-  canvas2d.fillStyle = "white";
-  canvas2d.clearRect(0, 0, canvas.width, canvas.height);
-}
+    poop.style.animation = 'none';
+    poop.style.left = `${poopPosition}px`;
 
-for (var i = 0; i < snakeSegments.length; i++) {
-  canvas2d.fillRect(snakeSegments[i].x, snakeSegments[i].y, 10, 10);
-}
+    poop.src = "img/dance.gif";
+    poop.style.width = "120px";
+    poop.style.marginLeft = "30px";
+    
 
-function gameLoop() {
-  moveSnake();
-  drawSnake();
-}
+    pika.style.animation = 'none';
+    pika.style.bottom = `${pikaPosition}px`;
+
+    pika.src = "img/pika2.gif";
+    pika.style.width = '120px'
+    pika.style.marginLeft = '30px'
+
+    clearInterval(loop);
+
+    document.getElementById("text-start").style.color = "black";
+    document.getElementById("text-start").innerHTML="<strong>GAME OVER</strong>";
+
+  }
+}, 10);
+
+document.addEventListener('keydown', jump);
